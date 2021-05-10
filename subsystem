@@ -1,0 +1,48 @@
+import numpy as np
+import pandas as pd
+
+fish_eggs = np.zeros(n_days)
+fish_feed = np.zeros(n_days)
+fish_pop = np.zeros(n_days)
+fish_meat = np.zeros(n_days)
+
+fish_calories = np.zeros(n_days)
+fish_carb = np.zeros(n_days)
+fish_pro = np.zeros(n_days)
+fish_fat = np.zeros(n_days)
+
+fish_eggs[0] = 600 # starting eggs
+fish_pop[0] = int(df.iloc[57][0]) # starting fish
+
+survival_rate = df.iloc[60][0] # survival rate from egg to maturity
+growth_time = int(df.iloc[59][0]) # 183 days to grow to maturity
+days_eggs = 56  # counter for cycles (new fish every 56 days)
+
+avg_weight = df.iloc[61][0] # kg average weight of a fish?
+amount_feed = df.iloc[62][0]  # the fish is eating 2% of its bodyweight
+
+fish_cals = df.iloc[63][0] # cal/kg
+fish_protein = df.iloc[64][0] #g/kg
+fish_carbs = df.iloc[65][0]
+fish_fats = df.iloc[66][0]
+
+for i in range(1,n_days):
+    
+    
+    if i % days_eggs == 0: # every 56 days, we get 600 more eggs
+        fish_eggs[i]=600 
+        
+    for j in range(i+35, n_days):
+        fish_pop[j] = fish_eggs[i] / (n_days-j)     # hatched eggs turn into baby fish  
+        fish_eggs[j] = -fish_pop[j]                 # subtract the hatched eggs
+        
+        if (j >= growth_time):
+            fish_meat[j] = avg_weight * n_crew * 1000 ## harvests 1 fish per person, convert to grams
+            fish_pop[i] = -n_crew ## fish population reduces by 1 per crew member
+            fish_feed[i] = sum(mw_pop[0:i] - (amount_feed*n_crew)) # 
+                
+    fish_calories[i] = fish_cals * fish_meat[i]
+    fish_carb[i] = fish_carbs * fish_meat[i]
+    fish_pro[i] = fish_protein * fish_meat[i]
+    fish_fat[i] = fish_fats * fish_meat[i]
+        
